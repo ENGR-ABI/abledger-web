@@ -175,163 +175,163 @@ export default function InvoiceView({
       `}</style>
       <div className="w-full min-h-screen bg-[#040B14] flex justify-center invoice-container print:bg-[#040B14]">
         <div className="w-full flex flex-col items-center print:w-auto">
-        {pages.map((pageItems, pageIndex) => (
-          <div
-            key={pageIndex}
-            className="w-full max-w-[210mm] print:w-[210mm] print:h-[297mm] mx-auto print:break-after-page invoice-page"
-            style={{ aspectRatio: "210 / 297", background: "#040B14" }}
-          >
-            <svg
-              viewBox="0 0 595.276 841.89"
-              preserveAspectRatio="xMidYMid meet"
-              style={{ width: "100%", height: "100%", display: "block" }}
+          {pages.map((pageItems, pageIndex) => (
+            <div
+              key={pageIndex}
+              className="w-full max-w-[210mm] print:w-[210mm] print:h-[297mm] mx-auto print:break-after-page invoice-page"
+              style={{ aspectRatio: "210 / 297", background: "#040B14" }}
             >
-              {/* Background */}
-              <rect x="-10" y="-10" width="620" height="870" fill="#040B14" />
-
-              {/* Header */}
-              <rect x="-10" y="-10" width="620" height="130" fill="#1D2027" />
-
-              {/* Tenant Logo */}
-              {tenantLogo && (
-            <g>
-              <defs>
-                <rect id="SVGID_LOGO" x="62.542" y="88.229" width="56.939" height="56.939" />
-              </defs>
-              <clipPath id="SVGID_CLIP_LOGO">
-                <use xlinkHref="#SVGID_LOGO" style={{ overflow: 'visible' }} />
-              </clipPath>
-              <image
-                x="62.542"
-                y="88.229"
-                width="56.939"
-                height="56.939"
-                href={tenantLogo.startsWith('http') ? tenantLogo : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api${tenantLogo}`}
-                clipPath="url(#SVGID_CLIP_LOGO)"
-              />
-            </g>
-          )}
-
-              {/* Tenant Name */}
-              <text
-                x="297.6"
-                y="70"
-                textAnchor="middle"
-                fill="#fff"
-                fontSize="23"
-                fontWeight="bold"
+              <svg
+                viewBox="0 0 595.276 841.89"
+                preserveAspectRatio="xMidYMid meet"
+                style={{ width: "100%", height: "100%", display: "block" }}
               >
-                {tenantName}
-              </text>
+                {/* Background */}
+                <rect x="-10" y="-10" width="620" height="870" fill="#040B14" />
 
-              {/* Invoice Title */}
-              <text
-                x="60"
-                y="220"
-                fill={primaryColor}
-                fontSize="50"
-                fontWeight="bold"
-              >
-                Invoice
-              </text>
+                {/* Header */}
+                <rect x="-10" y="-10" width="620" height="130" fill="#1D2027" />
 
-              {/* Invoice Meta (LEFT BLOCK) */}
-              <text x="60" y="270" fill="#fff" fontSize="12" fontWeight="600">
-                <tspan x="60" dy="0">
-                  Invoice #{invoice.invoiceNumber || invoice.id.slice(0, 8)}
-                </tspan>
-                <tspan x="60" dy="16">
-                  Date: {formatDate(invoice.issuedAt || invoice.createdAt || sale.created_at)}
-                </tspan>
-              </text>
-
-              {/* Billing To (RIGHT BLOCK – no overlap) */}
-              <text x="400" y="270" fill="#fff" fontSize="12" fontWeight="600">
-                <tspan x="400" dy="0">Billing To:</tspan>
-                <tspan x="400" dy="16">
-                  {sale.customer_name || "Customer"}
-                </tspan>
-              </text>
-
-              {/* Table Header */}
-              <rect x="58" y="295" width="479" height="27" fill={primaryColor} />
-              <text x="87" y="313" fill="#fff" fontSize="12" fontWeight="bold">Product</text>
-              <text x="289" y="313" fill="#fff" fontSize="12" fontWeight="bold">Price</text>
-              <text x="376" y="313" fill="#fff" fontSize="12" fontWeight="bold">Qty</text>
-              <text x="453" y="313" fill="#fff" fontSize="12" fontWeight="bold">Total</text>
-
-              {/* Rows */}
-              {pageItems.map((item, index) => {
-                const y = 335 + index * ROW_HEIGHT
-                return (
-                  <g key={index}>
-                    <rect x="58" y={y - 11} width="479" height="27" fill="#1D2027" />
-                    <text x="87" y={y + 10} fill="#fff" fontSize="12">{item.product_name}</text>
-                    <text x="289" y={y + 10} fill="#fff" fontSize="12">{formatCurrency(item.unit_price)}</text>
-                    <text x="387" y={y + 10} fill="#fff" fontSize="12">{item.quantity}</text>
-                    <text x="453" y={y + 10} fill="#fff" fontSize="12">{formatCurrency(item.total)}</text>
+                {/* Tenant Logo */}
+                {tenantLogo && (
+                  <g>
+                    <defs>
+                      <rect id="SVGID_LOGO" x="62.542" y="88.229" width="56.939" height="56.939" />
+                    </defs>
+                    <clipPath id="SVGID_CLIP_LOGO">
+                      <use xlinkHref="#SVGID_LOGO" style={{ overflow: 'visible' }} />
+                    </clipPath>
+                    <image
+                      x="62.542"
+                      y="88.229"
+                      width="56.939"
+                      height="56.939"
+                      href={tenantLogo.startsWith('http') ? tenantLogo : `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/api\/?$/, '')}/api${tenantLogo}`}
+                      clipPath="url(#SVGID_CLIP_LOGO)"
+                    />
                   </g>
-                )
-              })}
+                )}
 
-              {/* Summary + Payment Info (LAST PAGE ONLY) */}
-              {pageIndex === pages.length - 1 && (
-                <>
-                  <text x="337" y="490" fill="#fff" fontSize="11" fontWeight="bold">
-                    <tspan x="337" dy="0">Subtotal</tspan>
-                    <tspan x="337" dy="20">Tax</tspan>
-                    <tspan x="337" dy="20">Discount</tspan>
-                    <tspan x="337" dy="20">Total</tspan>
-                    <tspan x="337" dy="20">Amount Paid</tspan>
-                    <tspan x="337" dy="20">Due</tspan>
-                  </text>
+                {/* Tenant Name */}
+                <text
+                  x="297.6"
+                  y="70"
+                  textAnchor="middle"
+                  fill="#fff"
+                  fontSize="23"
+                  fontWeight="bold"
+                >
+                  {tenantName}
+                </text>
 
-                  <text x="450" y="490" fill="#fff" fontSize="11" fontWeight="bold">
-                    <tspan x="450" dy="0">{formatCurrency(subtotal)}</tspan>
-                    <tspan x="450" dy="20">{formatCurrency(taxAmount)}</tspan>
-                    <tspan x="450" dy="20">{formatCurrency(discountAmount)}</tspan>
-                    <tspan x="450" dy="20">{formatCurrency(total)}</tspan>
-                    <tspan x="450" dy="20">{formatCurrency(paidAmount)}</tspan>
-                    <tspan x="450" dy="20">{formatCurrency(dueAmount)}</tspan>
-                  </text>
+                {/* Invoice Title */}
+                <text
+                  x="60"
+                  y="220"
+                  fill={primaryColor}
+                  fontSize="50"
+                  fontWeight="bold"
+                >
+                  Invoice
+                </text>
 
-                  {/* Payment Info */}
-                  {dueAmount > 0 && (
+                {/* Invoice Meta (LEFT BLOCK) */}
+                <text x="60" y="270" fill="#fff" fontSize="12" fontWeight="600">
+                  <tspan x="60" dy="0">
+                    Invoice #{invoice.invoiceNumber || invoice.id.slice(0, 8)}
+                  </tspan>
+                  <tspan x="60" dy="16">
+                    Date: {formatDate(invoice.issuedAt || invoice.createdAt || sale.created_at)}
+                  </tspan>
+                </text>
+
+                {/* Billing To (RIGHT BLOCK – no overlap) */}
+                <text x="400" y="270" fill="#fff" fontSize="12" fontWeight="600">
+                  <tspan x="400" dy="0">Billing To:</tspan>
+                  <tspan x="400" dy="16">
+                    {sale.customer_name || "Customer"}
+                  </tspan>
+                </text>
+
+                {/* Table Header */}
+                <rect x="58" y="295" width="479" height="27" fill={primaryColor} />
+                <text x="87" y="313" fill="#fff" fontSize="12" fontWeight="bold">Product</text>
+                <text x="289" y="313" fill="#fff" fontSize="12" fontWeight="bold">Price</text>
+                <text x="376" y="313" fill="#fff" fontSize="12" fontWeight="bold">Qty</text>
+                <text x="453" y="313" fill="#fff" fontSize="12" fontWeight="bold">Total</text>
+
+                {/* Rows */}
+                {pageItems.map((item, index) => {
+                  const y = 335 + index * ROW_HEIGHT
+                  return (
+                    <g key={index}>
+                      <rect x="58" y={y - 11} width="479" height="27" fill="#1D2027" />
+                      <text x="87" y={y + 10} fill="#fff" fontSize="12">{item.product_name}</text>
+                      <text x="289" y={y + 10} fill="#fff" fontSize="12">{formatCurrency(item.unit_price)}</text>
+                      <text x="387" y={y + 10} fill="#fff" fontSize="12">{item.quantity}</text>
+                      <text x="453" y={y + 10} fill="#fff" fontSize="12">{formatCurrency(item.total)}</text>
+                    </g>
+                  )
+                })}
+
+                {/* Summary + Payment Info (LAST PAGE ONLY) */}
+                {pageIndex === pages.length - 1 && (
                   <>
-                  <text x="68" y="620" fill="#fff">
-                    <tspan x="68" dy="0" fontWeight="bold" fontSize="14" fill={primaryColor}>Payment Info:</tspan>
-                    {tenantBranding?.accountNumber && <tspan x="68" dy="18" fontSize="10">Account Number:</tspan>}
-                    {tenantBranding?.accountName && <tspan x="68" dy="18" fontSize="10">A/C Name:</tspan>}
-                    {tenantBranding?.bankName && <tspan x="68" dy="18" fontSize="10">Bank Name:</tspan>}
-                  </text>
-                  
-                  <text x="160" y="620" fill="#fff">
-                    {tenantBranding?.accountNumber && <tspan x="160" dy="18" fontSize="10">{tenantBranding.accountNumber}</tspan>}
-                    {tenantBranding?.accountName && <tspan x="160" dy="18" fontSize="10">{tenantBranding.accountName}</tspan>}
-                    {tenantBranding?.bankName && <tspan x="160" dy="18" fontSize="10">{tenantBranding.bankName}</tspan>}
-                  </text>
-                  </>
-                  )}
-                  {dueAmount <= 0 && (
-                    <text x="68" y="620" fill="#fff" fontSize="10" fontWeight="bold">
-                      Thank you for shopping with us!
+                    <text x="337" y="490" fill="#fff" fontSize="11" fontWeight="bold">
+                      <tspan x="337" dy="0">Subtotal</tspan>
+                      <tspan x="337" dy="20">Tax</tspan>
+                      <tspan x="337" dy="20">Discount</tspan>
+                      <tspan x="337" dy="20">Total</tspan>
+                      <tspan x="337" dy="20">Amount Paid</tspan>
+                      <tspan x="337" dy="20">Due</tspan>
                     </text>
-                  )}
-                </>
-              )}
 
-              {/* Footer */}
-              <text x="298" y="805" textAnchor="middle" fill="#fff" fontSize="10">
-                Powered by <tspan fill={primaryColor} fontWeight="bold">abledger.com</tspan>
-              </text>
-              
+                    <text x="450" y="490" fill="#fff" fontSize="11" fontWeight="bold">
+                      <tspan x="450" dy="0">{formatCurrency(subtotal)}</tspan>
+                      <tspan x="450" dy="20">{formatCurrency(taxAmount)}</tspan>
+                      <tspan x="450" dy="20">{formatCurrency(discountAmount)}</tspan>
+                      <tspan x="450" dy="20">{formatCurrency(total)}</tspan>
+                      <tspan x="450" dy="20">{formatCurrency(paidAmount)}</tspan>
+                      <tspan x="450" dy="20">{formatCurrency(dueAmount)}</tspan>
+                    </text>
 
-              <text x="298" y="825" textAnchor="middle" fill="#aaa" fontSize="9">
-                Page {pageIndex + 1} of {pages.length}
-              </text>
-            </svg>
-          </div>
-        ))}
+                    {/* Payment Info */}
+                    {dueAmount > 0 && (
+                      <>
+                        <text x="68" y="620" fill="#fff">
+                          <tspan x="68" dy="0" fontWeight="bold" fontSize="14" fill={primaryColor}>Payment Info:</tspan>
+                          {tenantBranding?.accountNumber && <tspan x="68" dy="18" fontSize="10">Account Number:</tspan>}
+                          {tenantBranding?.accountName && <tspan x="68" dy="18" fontSize="10">A/C Name:</tspan>}
+                          {tenantBranding?.bankName && <tspan x="68" dy="18" fontSize="10">Bank Name:</tspan>}
+                        </text>
+
+                        <text x="160" y="620" fill="#fff">
+                          {tenantBranding?.accountNumber && <tspan x="160" dy="18" fontSize="10">{tenantBranding.accountNumber}</tspan>}
+                          {tenantBranding?.accountName && <tspan x="160" dy="18" fontSize="10">{tenantBranding.accountName}</tspan>}
+                          {tenantBranding?.bankName && <tspan x="160" dy="18" fontSize="10">{tenantBranding.bankName}</tspan>}
+                        </text>
+                      </>
+                    )}
+                    {dueAmount <= 0 && (
+                      <text x="68" y="620" fill="#fff" fontSize="10" fontWeight="bold">
+                        Thank you for shopping with us!
+                      </text>
+                    )}
+                  </>
+                )}
+
+                {/* Footer */}
+                <text x="298" y="805" textAnchor="middle" fill="#fff" fontSize="10">
+                  Powered by <tspan fill={primaryColor} fontWeight="bold">abledger.com</tspan>
+                </text>
+
+
+                <text x="298" y="825" textAnchor="middle" fill="#aaa" fontSize="9">
+                  Page {pageIndex + 1} of {pages.length}
+                </text>
+              </svg>
+            </div>
+          ))}
         </div>
       </div>
     </>
